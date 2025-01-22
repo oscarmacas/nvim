@@ -21,6 +21,13 @@ vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 vim.keymap.set('n', '<Leader>r', ':Telescope registers<CR>', { noremap = true, silent = true })
 
+require('telescope').setup {}
+
+vim.keymap.set("n", "<leader>fz", function()
+  require('telescope.builtin').current_buffer_fuzzy_find()
+end, { noremap = true, silent = true })
+
+
 vim.api.nvim_set_keymap('n', '<leader>dr', [[:%s/^\([^,]*,[^,]*\),.*/\1/<CR>]], { noremap = true, silent = true })
 -- Key mappings for normal mode
 local map = vim.keymap.set
