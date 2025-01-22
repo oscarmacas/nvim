@@ -29,6 +29,7 @@ local opts = { noremap = true, silent = true }
 map('n', '<Leader>w', ':write<CR>', opts)   -- Save the current file
 map('n', '<Leader>a', ':wqa<CR>', opts)    -- Save and quit all
 map('n', '<Leader>x', ':wq<CR>', opts)     -- Save and quit the current file
+map('n', '<Leader>q', ':q!<CR>', opts)     -- Salir sin guardar
 
 -- Clear Search Highlights
 vim.keymap.set('n', '<Leader>/', ':nohlsearch<CR>', { noremap = true, silent = true })
