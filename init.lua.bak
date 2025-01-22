@@ -1,0 +1,65 @@
+-- Packer bootstrap: ensures packer.nvim is installed
+local ensure_packer = function()
+  local fn = vim.fn
+  local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
+  if fn.empty(fn.glob(install_path)) > 0 then
+    fn.system({
+      "git",
+      "clone",
+      "--depth",
+      "1",
+      "https://github.com/wbthomason/packer.nvim",
+      install_path,
+    })
+    vim.cmd([[packadd packer.nvim]])
+    return true
+  end
+  return false
+end
+
+local packer_bootstrap = ensure_packer()
+
+-- Autocommand to auto-compile when plugins.lua is saved
+vim.cmd([[
+  augroup packer_user_config
+    autocmd!
+    autocmd BufWritePost plugins.lua source <afile> | PackerSync
+  augroup end
+]])
+
+-- Packer startup function
+require("packer").startup(function(use)
+  use("wbthomason/packer.nvim") -- Packer manages itself
+
+  -- Telescope
+  use({
+    "nvim-telescope/telescope.nvim",
+    tag = "0.1.1",
+    requires = { { "nvim-lua/plenary.nvim" } },
+  })
+
+  -- FZF Lua
+  use("ibhagwan/fzf-lua")
+
+  -- Oil for file navigation
+  use("stevearc/oil.nvim")
+
+  -- Automatically set up your configuration after cloning packer.nvim
+  if packer_bootstrap then
+    require("packer").sync()
+  end
+end)
+
+-- Telescope configuration
+require("telescope").setup()
+
+-- FZF Lua configuration
+require("fzf-lua").setup()
+
+-- Oil configuration
+require("oil").setup()
+
+-- Keymaps (Optional: Adjust these to your preference)
+vim.api.nvim_set_keymap("n", "<leader>ff", ":Telescope find_files<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>fg", ":Telescope live_grep<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>of", ":lua require('oil').open()<CR>", { noremap = true, silent = true })
